@@ -1,16 +1,13 @@
 package datastructures.dictionaries;
 
-import cse332.datastructures.containers.Item;
 import cse332.exceptions.NotYetImplementedException;
-import cse332.interfaces.misc.Dictionary;
-import cse332.interfaces.misc.SimpleIterator;
 import cse332.interfaces.trie.TrieMap;
 import cse332.types.BString;
 
-import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Supplier;
 
 /**
  * See cse332/interfaces/trie/TrieMap.java
@@ -18,26 +15,22 @@ import java.util.function.Supplier;
  * for method specifications.
  */
 public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> extends TrieMap<A, K, V> {
-    public class HashTrieNode extends TrieNode<Dictionary<A, HashTrieNode>, HashTrieNode> {
+    public class HashTrieNode extends TrieNode<Map<A, HashTrieNode>, HashTrieNode> {
         public HashTrieNode() {
             this(null);
         }
 
         public HashTrieNode(V value) {
-            this.pointers = new ChainingHashTable<A, HashTrieNode>(new Supplier<Dictionary<A, HashTrieNode>>() {
-                @Override
-                public Dictionary<A, HashTrieNode> get() {
-                    return new MoveToFrontList<>();
-                }
-            });
+            this.pointers = new HashMap<>();
             this.value = value;
         }
 
         @Override
-        public Iterator<Entry<A, HashTrieNode>> iterator() {
-            throw new NotYetImplementedException();
+        public Iterator<Entry<A, HashTrieMap<A, K, V>.HashTrieNode>> iterator() {
+            return pointers.entrySet().iterator();
         }
     }
+
 
     public HashTrieMap(Class<K> KClass) {
         super(KClass);

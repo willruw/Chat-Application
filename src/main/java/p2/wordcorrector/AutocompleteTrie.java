@@ -1,10 +1,7 @@
-
 package p2.wordcorrector;
 
 import cse332.types.AlphabeticString;
 import datastructures.dictionaries.HashTrieMap;
-
-import java.util.Map.Entry;
 
 public class AutocompleteTrie extends HashTrieMap<Character, AlphabeticString, Integer> {
 
@@ -16,9 +13,11 @@ public class AutocompleteTrie extends HashTrieMap<Character, AlphabeticString, I
         @SuppressWarnings("unchecked")
         HashTrieNode current = (HashTrieNode) this.root;
         for (Character item : key.toCharArray()) {
-            current = current.pointers.find(item);
-            if (current == null) {
+            if (!current.pointers.containsKey(item)) {
                 return null;
+            }
+            else {
+                current = current.pointers.get(item);
             }
         }
 
@@ -28,9 +27,8 @@ public class AutocompleteTrie extends HashTrieMap<Character, AlphabeticString, I
             if (current.value != null) {
                 return null;
             }
-            Entry<Character, HashTrieNode> next = current.iterator().next();
-            result += next.getKey();
-            current = next.getValue();
+            result += current.pointers.keySet().iterator().next();
+            current = current.pointers.values().iterator().next();
         }
 
         // Switch this to return null to only complete if we're at the end of
