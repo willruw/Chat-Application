@@ -21,7 +21,7 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
 
         public HashTrieNode(V value) {
-            this.pointers = new HashMap<>();
+            this.pointers = new HashMap<A, HashTrieNode>();
             this.value = value;
         }
 
@@ -31,10 +31,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
     }
 
-
     public HashTrieMap(Class<K> KClass) {
         super(KClass);
-        throw new NotYetImplementedException();
+        this.root = new HashTrieNode();
     }
 
     @Override
@@ -54,11 +53,11 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
 
     @Override
     public void delete(K key) {
-        throw new UnsupportedOperationException();
+        throw new NotYetImplementedException();
     }
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException();
+        throw new NotYetImplementedException();
     }
 }
