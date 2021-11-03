@@ -16,6 +16,7 @@ import java.util.Iterator;
 public class BinarySearchTree<K extends Comparable<? super K>, V>
         extends ComparableDictionary<K, V> {
     // The root of the BST. Root is null if and only if the tree is empty.
+    // This MUST be used as your root for any class that extends this
     protected BSTNode root;
 
     /**
