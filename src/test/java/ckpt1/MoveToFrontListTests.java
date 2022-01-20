@@ -16,7 +16,7 @@ public class MoveToFrontListTests {
 	@SuppressWarnings("unchecked")
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void checkStructure() {
+	public void test_insertIterator_severalElements_correctStructure() {
 		MoveToFrontList<Integer, Integer> list = new MoveToFrontList<Integer, Integer>();
 
 		int[] arr = {6, 5, 10, 14, 10, 31, 10, 13, 10, 10, 12, 10, 14, 10, 10, 11, 10, 14, 9, 8, 3, 2, 1, 0, 7, 4};
@@ -37,14 +37,13 @@ public class MoveToFrontListTests {
 
 		// Compare strings to make sure we get the right one
 		// Can use list.toString as well, but I'm not sure if students may modify that
-		String mtf_correct = "[4=1, 7=1, 0=1, 1=1, 2=1, 3=1, 8=1, 9=1, 14=3, 10=9, 11=1, 12=1, 13=1, 31=1, 5=1, 6=1]";
 		String mtf_test = Arrays.toString(dcs);
-		assertEquals(mtf_correct, mtf_test);
+		assertEquals("[4=1, 7=1, 0=1, 1=1, 2=1, 3=1, 8=1, 9=1, 14=3, 10=9, 11=1, 12=1, 13=1, 31=1, 5=1, 6=1]", mtf_test);
 	}
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void testHugeMTFList() {
+	public void test_insertFind_manyElements_correctStructure() {
 		MoveToFrontList<String, Integer> list = new MoveToFrontList<>();
 
 		int n = 1000;
@@ -56,7 +55,8 @@ public class MoveToFrontListTests {
 			for (int j = 0; j < k + 1; j ++)
 				list.insert(str, list.find(str) == null ? 1 : list.find(str) + 1);
 		}
-		// Delete them all
+
+        // Check the elements
 		int totalCount = 0;
 		for (Item<String, Integer> dc : list) {
 			assertEquals((Integer.parseInt(dc.key) + 1) * 5, dc.value.intValue());

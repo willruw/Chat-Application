@@ -15,11 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class AVLTreeTests {
 
-	private AVLTree<String, Integer> init() {
-		return new AVLTree<>();
-	}
-
-	private <E extends Comparable<E>> void incCount(Dictionary<E, Integer> tree, E key) {
+	private <E extends Comparable<E>> void incrementValueWithKey(Dictionary<E, Integer> tree, E key) {
 		Integer value = tree.find(key);
 		if (value == null) {
 			tree.insert(key, 1);
@@ -31,57 +27,52 @@ public class AVLTreeTests {
 	@SuppressWarnings("rawtypes")
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void checkStructure() {
+	public void test_insertFind_severalElements_correctStructure() {
 		AVLTree<Integer, Integer> tree = new AVLTree<>();
-		incCount(tree, 10);
-		incCount(tree, 14);
-		incCount(tree, 10);
-		incCount(tree, 31);
-		incCount(tree, 10);
-		incCount(tree, 13);
-		incCount(tree, 10);
-		incCount(tree, 10);
-		incCount(tree, 12);
-		incCount(tree, 10);
-		incCount(tree, 13);
-		incCount(tree, 10);
-		incCount(tree, 10);
-		incCount(tree, 11);
-		incCount(tree, 10);
-		incCount(tree, 14);
-		incCount(tree, 9);
-		incCount(tree, 8);
-		incCount(tree, 7);
-		incCount(tree, 6);
-		incCount(tree, 5);
-		incCount(tree, 4);
-		incCount(tree, 3);
-		incCount(tree, 2);
-		incCount(tree, 1);
-		incCount(tree, 0);
-//		{10, 14, 10, 31, 10, 13, 10, 10, 12, 10, 13, 10, 10, 11, 10, 14, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
-//		{10, 14, 31, 13, 12, 11, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+        // {10, 14, 10, 31, 10, 13, 10, 10, 12, 10, 13, 10, 10, 11, 10, 14, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 14);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 31);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 13);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 12);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 13);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 11);
+
+        // {10, 14, 31, 13, 12, 11, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
+		incrementValueWithKey(tree, 10);
+		incrementValueWithKey(tree, 14);
+		incrementValueWithKey(tree, 9);
+		incrementValueWithKey(tree, 8);
+		incrementValueWithKey(tree, 7);
+		incrementValueWithKey(tree, 6);
+		incrementValueWithKey(tree, 5);
+		incrementValueWithKey(tree, 4);
+		incrementValueWithKey(tree, 3);
+		incrementValueWithKey(tree, 2);
+		incrementValueWithKey(tree, 1);
+		incrementValueWithKey(tree, 0);
 
 		BSTNode root = getField(tree, "root");
 
 		String trueData = " [8 [4 [2 [1 [0..].] [3..]] [6 [5..] [7..]]] [12 [10 [9..] [11..]] [14 [13..] [31..]]]]";
 		String trueCounts = " [1 [1 [1 [1 [1..].] [1..]] [1 [1..] [1..]]] [1 [9 [1..] [1..]] [2 [2..] [1..]]]]";
-//		String trueData = " [10 [6 [2 [1 [0..].] [4 [3..] [5..]]] [8 [7..] [9..]]] [13 [12 [11..].] [14. [31..]]]]";
-//		String trueCounts = " [9 [1 [1 [1 [1..].] [1 [1..] [1..]]] [1 [1..] [1..]]] [2 [1 [1..].] [2. [1..]]]]";
 
-//		System.err.println(nestd(root));
-//		System.err.println(trueData);
 		assertEquals(trueData, nestd(root));
 		assertEquals(trueCounts, nestc(root));
 	}
 
-	@SuppressWarnings("rawtypes")
 	public String nestd(BSTNode root) {
 		if(root == null)
 			return ".";
 		return " [" + root.key + nestd(root.children[0]) + nestd(root.children[1]) + "]";
 	}
-	@SuppressWarnings("rawtypes")
 	public String nestc(BSTNode root) {
 		if(root == null)
 			return ".";
@@ -90,13 +81,13 @@ public class AVLTreeTests {
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void testTreeWith5Items() {
-		AVLTree<String, Integer> tree = init();
+	public void test_insertFind_fewElements_correctStructure() {
+		AVLTree<String, Integer> tree =  new AVLTree<>();
 		String[] tests_struct = { "a", "b", "c", "d", "e" };
 		String[] tests = { "b", "d", "e", "c", "a" };
 		for (int i = 0; i < 5; i++) {
 			String str = tests[i] + "a";
-			incCount(tree, str);
+			incrementValueWithKey(tree, str);
 		}
 
 		int i = 0;
@@ -110,8 +101,8 @@ public class AVLTreeTests {
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void testHugeTree() {
-		AVLTree<String, Integer> tree = init();
+	public void test_insertFind_manyElements_correctStructure() {
+		AVLTree<String, Integer> tree = new AVLTree<>();
 		int n = 1000;
 
 		// Add them
@@ -119,7 +110,7 @@ public class AVLTreeTests {
 			int k = (i % n) * 37 % n;
 			String str = String.format("%05d", k);
 			for (int j = 0; j < k + 1; j ++)
-				incCount(tree, str);
+				incrementValueWithKey(tree, str);
 		}
 
 		// Calculate count of all values in tree

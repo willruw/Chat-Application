@@ -21,21 +21,19 @@ public class AutocompleteTrie extends HashTrieMap<Character, AlphabeticString, I
             }
         }
 
-        String result = key;
+        StringBuilder result = new StringBuilder(key);
 
         while (current.pointers.size() == 1) {
             if (current.value != null) {
                 return null;
             }
-            result += current.pointers.keySet().iterator().next();
+            result.append(current.pointers.keySet().iterator().next());
             current = current.pointers.values().iterator().next();
         }
 
-        // Switch this to return null to only complete if we're at the end of
-        // the word
         if (current.pointers.size() != 0) {
-            return result;
+            return result.toString();
         }
-        return result;
+        return result.toString();
     }
 }

@@ -14,19 +14,14 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class HashTrieMapTests {
-    protected static HashTrieMap<Character, AlphabeticString, String> STUDENT;
-
-    @BeforeEach
-    public void init() {
-        STUDENT = new HashTrieMap<>(AlphabeticString.class);
-    }
 
     /**
      * Tests if insert, find, and findPrefix work in general.
      */
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testBasic() {
+    public void test_insertFindFindPrefix_fewElements_correctStructure() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         String[] words = {"dog", "doggy", "doge", "dragon", "cat", "draggin"};
         String[] invalid = {"d", "cataract", "", "do"};
         addAll(STUDENT, words);
@@ -39,7 +34,8 @@ public class HashTrieMapTests {
      */
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testFindPrefixes() {
+    public void test_findPrefix_fewElements_correctStructure() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         String[] words = {"dog", "doggy", "doge", "dragon", "cat", "draggin"};
         addAll(STUDENT, words);
 
@@ -52,7 +48,8 @@ public class HashTrieMapTests {
      */
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testFindNonexistentDoesNotCrash() {
+    public void test_finds_nonexistentKey_doesNotCrash() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         addAll(STUDENT, "foo", "bar", "baz");
         assertNull(STUDENT.find(a("orangutan")));
         assertNull(STUDENT.find(a("z")));
@@ -64,7 +61,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testFindingNullKeyCausesError() {
+    public void test_finds_nullKey_throwsException() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         assertThrows(IllegalArgumentException.class, () -> {
             STUDENT.find(null);
         });
@@ -72,7 +70,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testFindingNullPrefixCausesError() {
+    public void test_findPrefix_nullKey_throwsException() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         assertThrows(IllegalArgumentException.class, () -> {
             STUDENT.findPrefix(null);
         });
@@ -83,7 +82,8 @@ public class HashTrieMapTests {
      */
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testInsertReplacesOldValue() {
+    public void test_insert_fewElements_valueReplaced() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         AlphabeticString key = a("myKey");
         assertNull(STUDENT.insert(key, "foo"));
         assertEquals("foo", STUDENT.insert(key, "bar"));
@@ -92,7 +92,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testInsertingNullKeyCausesError() {
+    public void test_insert_nullKey_throwsException() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         assertThrows(IllegalArgumentException.class, () -> {
             STUDENT.insert(null, "foo");
         });
@@ -100,7 +101,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testInsertingNullValueCausesError() {
+    public void test_insert_nullValue_throwsException() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         assertThrows(IllegalArgumentException.class, () -> {
             STUDENT.insert(a("foo"), null);
         });
@@ -108,7 +110,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testDeletingCausesError() {
+    public void test_delete_oneElement_throwsException() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         assertThrows(UnsupportedOperationException.class, () -> {
             STUDENT.insert(a("foo"), "doo");
             STUDENT.delete(a("foo"));
@@ -117,7 +120,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testClearCausesError() {
+    public void test_clear_oneElement_throwsException() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         assertThrows(UnsupportedOperationException.class, () -> {
             STUDENT.insert(a("foo"), "doo");
             STUDENT.clear();
@@ -126,7 +130,8 @@ public class HashTrieMapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void checkUnderlyingStructure() {
+    public void test_insert_fewElements_correctInternalStructure() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
         STUDENT.insert(a(""), "A");
         STUDENT.insert(a("foo"), "B");
         STUDENT.insert(a("fez"), "C");
@@ -148,6 +153,45 @@ public class HashTrieMapTests {
                                         .branch('z', node("E")
                                                 .branch('y', node("F"))))));
         assertTrue(equals(fullExpected, getField(STUDENT, "root")));
+    }
+
+    @Test()
+    @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
+    public void test_insertFindFindPrefix_manyElements_correctStructure() {
+        HashTrieMap<Character, AlphabeticString, String> STUDENT = new HashTrieMap<>(AlphabeticString.class);
+        // Should contain 30 characters
+        char[] symbols = "abcdefghijklmnopqrstuvwxyz!@#$".toCharArray();
+        long i = 0;
+        for (char a : symbols) {
+            for (char b : symbols) {
+                for (char c : symbols) {
+                    for (char d : symbols) {
+                        Character[] word = new Character[]{a, b, c, d};
+                        STUDENT.insert(new AlphabeticString(word), "" + i);
+                        i += 1;
+                    }
+                }
+            }
+        }
+
+        for (char a : symbols) {
+            for (char b : symbols) {
+                assertTrue(STUDENT.findPrefix(new AlphabeticString(new Character[]{a, b})));
+            }
+        }
+
+        i = 0;
+        for (char a : symbols) {
+            for (char b : symbols) {
+                for (char c : symbols) {
+                    for (char d : symbols) {
+                        Character[] word = new Character[]{a, b, c, d};
+                        assertEquals("" + i, STUDENT.find(new AlphabeticString(word)));
+                        i += 1;
+                    }
+                }
+            }
+        }
     }
 
     protected static boolean equals(MockNode expected, HashTrieMap<Character, AlphabeticString, String>.HashTrieNode student) {
@@ -190,44 +234,6 @@ public class HashTrieMapTests {
         public MockNode branch(char c, MockNode child) {
             this.pointers.put(c, child);
             return this;
-        }
-    }
-
-    @Test()
-    @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void stressTest() {
-        // Should contain 30 characters
-        char[] symbols = "abcdefghijklmnopqrstuvwxyz!@#$".toCharArray();
-        long i = 0;
-        for (char a : symbols) {
-            for (char b : symbols) {
-                for (char c : symbols) {
-                    for (char d : symbols) {
-                        Character[] word = new Character[]{a, b, c, d};
-                        STUDENT.insert(new AlphabeticString(word), "" + i);
-                        i += 1;
-                    }
-                }
-            }
-        }
-
-        for (char a : symbols) {
-            for (char b : symbols) {
-                assertTrue(STUDENT.findPrefix(new AlphabeticString(new Character[]{a, b})));
-            }
-        }
-
-        i = 0;
-        for (char a : symbols) {
-            for (char b : symbols) {
-                for (char c : symbols) {
-                    for (char d : symbols) {
-                        Character[] word = new Character[]{a, b, c, d};
-                        assertEquals("" + i, STUDENT.find(new AlphabeticString(word)));
-                        i += 1;
-                    }
-                }
-            }
         }
     }
 

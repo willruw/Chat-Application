@@ -15,35 +15,27 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MinFourHeapTests {
-    private static Random RAND;
-    protected static WorkList<String> STUDENT_STR;
-    protected static WorkList<Double> STUDENT_DOUBLE;
-    protected static WorkList<Integer> STUDENT_INT;
-
-    @BeforeEach
-    public void init() {
-        STUDENT_STR = new MinFourHeap<>(String::compareTo);
-        STUDENT_DOUBLE = new MinFourHeap<>(Double::compareTo);
-        STUDENT_INT = new MinFourHeap<>(Integer::compareTo);
-        RAND = new Random(42);
-    }
+    private static final int SEED = 42;
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHasWork() {
+    public void test_hasWork_empty_noWork() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeap<>(Integer::compareTo);
         assertFalse(STUDENT_INT.hasWork());
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHasWorkAfterAdd() {
+    public void test_hasWork_oneElement_hasWork() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeap<>(Integer::compareTo);
         STUDENT_INT.add(1);
         assertTrue(STUDENT_INT.hasWork());
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHasWorkAfterAddRemove() {
+    public void test_addNextHasWork_manyElements_noWork() {
+        WorkList<Double> STUDENT_DOUBLE = new MinFourHeap<>(Double::compareTo);
         for (int i = 0; i < 1000; i++) {
             STUDENT_DOUBLE.add(Math.random());
         }
@@ -54,24 +46,35 @@ public class MinFourHeapTests {
     }
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testPeekHasException() {
-        assertTrue(doesPeekThrowException(STUDENT_INT));
+    public void test_peek_fewElements_throwsException() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeap<>(Integer::compareTo);
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.peek();
+        });
 
         addAndRemove(STUDENT_INT, 42, 10);
-        assertTrue(doesPeekThrowException(STUDENT_INT));
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.peek();
+        });
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testNextHasException() {
-        assertTrue(doesNextThrowException(STUDENT_INT));
+    public void test_next_fewElements_throwsException() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeap<>(Integer::compareTo);
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.next();
+        });
 
         addAndRemove(STUDENT_INT, 42, 10);
-        assertTrue(doesNextThrowException(STUDENT_INT));
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.next();
+        });
     }
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testClear() {
+    public void test_clear_fewElements_empty() {
+        WorkList<String> STUDENT_STR = new MinFourHeap<>(String::compareTo);
         addAll(STUDENT_STR, new String[]{"Beware", "the", "Jabberwock", "my", "son!"});
 
         assertTrue(STUDENT_STR.hasWork());
@@ -80,13 +83,17 @@ public class MinFourHeapTests {
         STUDENT_STR.clear();
         assertFalse(STUDENT_STR.hasWork());
         assertEquals(0, STUDENT_STR.size());
-        assertTrue(doesPeekThrowException(STUDENT_STR));
-        assertTrue(doesNextThrowException(STUDENT_STR));
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_STR.peek();
+        });
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_STR.next();
+        });
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHeapWith5Items() {
+    public void test_addNext_fewElements_correctStructure() {
         PriorityWorkList<String> heap = new MinFourHeap<>(String::compareTo);
         String[] tests = { "a", "b", "c", "d", "e" };
         for (int i = 0; i < 5; i++) {
@@ -103,7 +110,7 @@ public class MinFourHeapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testOrderingDoesNotMatter() {
+    public void test_addPeekNext_differentOrderings_correctStructure() {
         PriorityWorkList<String> ordered = new MinFourHeap<>(String::compareTo);
         PriorityWorkList<String> reversed = new MinFourHeap<>(String::compareTo);
         PriorityWorkList<String> random = new MinFourHeap<>(String::compareTo);
@@ -129,7 +136,7 @@ public class MinFourHeapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHugeHeap() {
+    public void test_addNext_manyElements_correctStructure() {
         PriorityWorkList<String> heap = new MinFourHeap<>(String::compareTo);
         int n = 10000;
 
@@ -147,7 +154,8 @@ public class MinFourHeapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testWithCustomComparable() {
+    public void test_customComparator_manyElements_correctStructure() {
+        Random RAND = new Random(SEED);
         PriorityWorkList<Coordinate> student = new MinFourHeap<>(Coordinate::compareTo);
         Queue<Coordinate> reference = new PriorityQueue<>();
 
@@ -166,7 +174,7 @@ public class MinFourHeapTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void checkStructure() {
+    public void test_addNext_severalElements_correctStructure() {
         PriorityWorkList<Integer> heap = new MinFourHeap<>(Integer::compareTo);
         addAll(heap, new Integer[] {10, 10, 15, 1, 17, 16, 100, 101, 102, 103, 105, 106, 107, 108});
 
@@ -229,24 +237,6 @@ public class MinFourHeapTests {
         for (int i = 0; i < amount; i++) {
             worklist.next();
         }
-    }
-
-    protected static <E> boolean doesPeekThrowException(WorkList<E> worklist) {
-        try {
-            worklist.peek();
-        } catch (NoSuchElementException e) {
-            return true;
-        }
-        return false;
-    }
-
-    protected static <E> boolean doesNextThrowException(WorkList<E> worklist) {
-        try {
-            worklist.next();
-        } catch (NoSuchElementException e) {
-            return true;
-        }
-        return false;
     }
 
     protected <T> T getField(Object o, String fieldName) {

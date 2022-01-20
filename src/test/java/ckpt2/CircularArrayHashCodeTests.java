@@ -11,15 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CircularArrayHashCodeTests {
 
-	private CircularArrayFIFOQueue<String> init() {
-		return new CircularArrayFIFOQueue<String>(10);
-	}
-
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void equality() {
-		CircularArrayFIFOQueue<String> l1 = init();
-		CircularArrayFIFOQueue<String> l2 = init();
+	public void test_hashCode_fewElements_equal() {
+		CircularArrayFIFOQueue<String> l1 = new CircularArrayFIFOQueue<>(10);
+		CircularArrayFIFOQueue<String> l2 = new CircularArrayFIFOQueue<>(10);
 		for (int i = 0; i < 3; i++) {
 			l1.add("a");
 			l2.add("a");
@@ -29,9 +25,9 @@ public class CircularArrayHashCodeTests {
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void ineq1() {
-		CircularArrayFIFOQueue<String> l1 = init();
-		CircularArrayFIFOQueue<String> l2 = init();
+	public void test_hashCode_fewElements_notEqual() {
+		CircularArrayFIFOQueue<String> l1 = new CircularArrayFIFOQueue<>(10);
+		CircularArrayFIFOQueue<String> l2 = new CircularArrayFIFOQueue<>(10);
 		l1.add("a");
 		l1.add("a");
 		l1.add("b");
@@ -43,9 +39,9 @@ public class CircularArrayHashCodeTests {
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void ineq2() {
-		CircularArrayFIFOQueue<String> l1 = init();
-		CircularArrayFIFOQueue<String> l2 = init();
+	public void test_hashCode_fewElements2_notEqual() {
+		CircularArrayFIFOQueue<String> l1 = new CircularArrayFIFOQueue<>(10);
+		CircularArrayFIFOQueue<String> l2 = new CircularArrayFIFOQueue<>(10);
 		l1.add("a");
 		l1.add("a");
 		l1.add("a");
@@ -58,9 +54,9 @@ public class CircularArrayHashCodeTests {
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void ineq3() {
-		CircularArrayFIFOQueue<String> l1 = init();
-		CircularArrayFIFOQueue<String> l2 = init();
+	public void test_hashCode_fewElements3_notEqual() {
+		CircularArrayFIFOQueue<String> l1 = new CircularArrayFIFOQueue<>(10);
+		CircularArrayFIFOQueue<String> l2 = new CircularArrayFIFOQueue<>(10);
 		l1.add("a");
 		l1.add("b");
 		l1.add("c");
@@ -72,9 +68,9 @@ public class CircularArrayHashCodeTests {
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void equality_consistent_with_hashcode() {
-		CircularArrayFIFOQueue<String> l1 = init();
-		CircularArrayFIFOQueue<String> l2 = init();
+	public void test_equalHashCode_fewElements2_equal() {
+		CircularArrayFIFOQueue<String> l1 = new CircularArrayFIFOQueue<>(10);
+		CircularArrayFIFOQueue<String> l2 = new CircularArrayFIFOQueue<>(10);
 		l1.add("a");
 		l1.add("b");
 		l2.add("a");

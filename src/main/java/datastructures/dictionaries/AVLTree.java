@@ -18,12 +18,12 @@ import cse332.datastructures.trees.BinarySearchTree;
  * the references used to access the instance).  Such masking will
  * lead to highly perplexing and erroneous behavior. Instead,
  * continue using the existing BSTNode children array.
- * 4. If this class has redundant methods, your score will be heavily
- * penalized.
+ * 4. Ensure that the class does not have redundant methods
  * 5. Cast children array to AVLNode whenever necessary in your
  * AVLTree. This will result a lot of casts, so we recommend you make
  * private methods that encapsulate those casts.
  * 6. Do NOT override the toString method. It is used for grading.
+ * 7. The internal structure of your AVLTree (from this.root to the leaves) must be correct
  */
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {

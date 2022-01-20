@@ -14,35 +14,30 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MinFourHeapComparableTests {
-    private static WorkList<String> STUDENT_STR;
-    private static WorkList<Double> STUDENT_DOUBLE;
-    private static WorkList<Integer> STUDENT_INT;
-    private static Random RAND;
-
-    @BeforeEach
-    public void init() {
-        STUDENT_STR = new MinFourHeapComparable<>();
-        STUDENT_DOUBLE = new MinFourHeapComparable<>();
-        STUDENT_INT = new MinFourHeapComparable<>();
-        RAND = new Random(42);
-    }
+    private static final int SEED = 42;
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHasWork() {
+    public void test_hasWork_empty_noWork() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+
         assertFalse(STUDENT_INT.hasWork());
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHasWorkAfterAdd() {
+    public void test_hasWork_oneElement_hasWork() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+
         STUDENT_INT.add(1);
         assertTrue(STUDENT_INT.hasWork());
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHasWorkAfterAddRemove() {
+    public void test_hasWork_manyElements_noWork() {
+        WorkList<Double> STUDENT_DOUBLE = new MinFourHeapComparable<>();
+
         for (int i = 0; i < 1000; i++) {
             STUDENT_DOUBLE.add(Math.random());
         }
@@ -53,24 +48,35 @@ public class MinFourHeapComparableTests {
     }
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testPeekHasException() {
-        assertTrue(doesPeekThrowException(STUDENT_INT));
+    public void test_peek_empty_exceptionThrown() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.peek();
+        });
 
         addAndRemove(STUDENT_INT, 42, 10);
-        assertTrue(doesPeekThrowException(STUDENT_INT));
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.peek();
+        });
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testNextHasException() {
-        assertTrue(doesNextThrowException(STUDENT_INT));
+    public void test_next_empty_exceptionThrown() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.next();
+        });
 
         addAndRemove(STUDENT_INT, 42, 10);
-        assertTrue(doesNextThrowException(STUDENT_INT));
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_INT.next();
+        });
     }
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testClear() {
+    public void test_clear_fewElements_empty() {
+        WorkList<String> STUDENT_STR = new MinFourHeapComparable<>();
         addAll(STUDENT_STR, new String[]{"Beware", "the", "Jabberwock", "my", "son!"});
 
         assertTrue(STUDENT_STR.hasWork());
@@ -79,13 +85,17 @@ public class MinFourHeapComparableTests {
         STUDENT_STR.clear();
         assertFalse(STUDENT_STR.hasWork());
         assertEquals(0, STUDENT_STR.size());
-        assertTrue(doesPeekThrowException(STUDENT_STR));
-        assertTrue(doesNextThrowException(STUDENT_STR));
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_STR.peek();
+        });
+        assertThrows(NoSuchElementException.class, () -> {
+            STUDENT_STR.next();
+        });
     }
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHeapWith5Items() {
+    public void test_add_fewElements_correct() {
         PriorityWorkList<String> heap = new MinFourHeapComparable<>();
         String[] tests = { "a", "b", "c", "d", "e" };
         for (int i = 0; i < 5; i++) {
@@ -102,7 +112,7 @@ public class MinFourHeapComparableTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testOrderingDoesNotMatter() {
+    public void test_addPeekNext_fewElements_correctOrdering() {
         PriorityWorkList<String> ordered = new MinFourHeapComparable<>();
         PriorityWorkList<String> reversed = new MinFourHeapComparable<>();
         PriorityWorkList<String> random = new MinFourHeapComparable<>();
@@ -128,7 +138,7 @@ public class MinFourHeapComparableTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testHugeHeap() {
+    public void test_addNext_manyElements_correctOrdering() {
         PriorityWorkList<String> heap = new MinFourHeapComparable<>();
         int n = 10000;
 
@@ -146,7 +156,8 @@ public class MinFourHeapComparableTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void testWithCustomComparable() {
+    public void test_peekNextCustomComparator_manyElements_correctOrdering() {
+        Random RAND = new Random(SEED);
         PriorityWorkList<Coordinate> student = new MinFourHeapComparable<>();
         Queue<Coordinate> reference = new PriorityQueue<>();
 
@@ -165,7 +176,7 @@ public class MinFourHeapComparableTests {
 
     @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-    public void checkStructure() {
+    public void test_addNext_severalElements_correctStructure() {
         PriorityWorkList<Integer> heap = new MinFourHeapComparable<>();
         addAll(heap, new Integer[] {10, 10, 15, 1, 17, 16, 100, 101, 102, 103, 105, 106, 107, 108});
 
@@ -245,23 +256,5 @@ public class MinFourHeapComparableTests {
         for (int i = 0; i < amount; i++) {
             worklist.next();
         }
-    }
-
-    protected static <E> boolean doesPeekThrowException(WorkList<E> worklist) {
-        try {
-            worklist.peek();
-        } catch (NoSuchElementException e) {
-            return true;
-        }
-        return false;
-    }
-
-    protected static <E> boolean doesNextThrowException(WorkList<E> worklist) {
-        try {
-            worklist.next();
-        } catch (NoSuchElementException e) {
-            return true;
-        }
-        return false;
     }
 }

@@ -12,19 +12,19 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class HashTableTests {
+public class ChainingHashTableTests {
 
-	private void incCount(Dictionary<String, Integer> list, String key) {
+	private void incrementValueWithKey(Dictionary<String, Integer> list, String key) {
 		Integer find = list.find(key);
 		if (find == null)
 			list.insert(key, 1);
 		else
-			list.insert(key, 1 + find);
+			list.insert(key, find + 1);
 	}
 
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
-	public void testHugeHashTable() {
+	public void test_insertFind_manyElements_correctStructure() {
 		ChainingHashTable<String, Integer> list = new ChainingHashTable<>(MoveToFrontList::new);
 
 		int n = 1000;
@@ -34,7 +34,7 @@ public class HashTableTests {
 			int k = (i % n) * 37 % n;
 			String str = String.format("%05d", k);
 			for (int j = 0; j < k + 1; j ++)
-				incCount(list, str);
+				incrementValueWithKey(list, str);
 		}
 
 		// Delete them all
