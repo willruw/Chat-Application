@@ -17,7 +17,7 @@ public class SpellingCorrector {
         this.dictionary = new AutocompleteTrie();
         Scanner dict;
         try {
-            dict = new Scanner(new File("dictionary2.txt"));
+            dict = new Scanner(new File("./corpus/dictionary2.txt"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(
                     "Couldn't read dictionary file for spelling correction and autocompletion.");
