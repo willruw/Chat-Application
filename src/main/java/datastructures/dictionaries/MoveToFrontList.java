@@ -9,9 +9,9 @@ import java.util.Iterator;
 /**
  * 1. The list is typically not sorted.
  * 2. Add new items to the front of the list.
- * 3. Whenever find is called on an item, move it to the front of the
- * list. This means you remove the node from its current position
- * and make it the first node in the list.
+ * 3. Whenever find or insert is called on an existing key, move it
+ * to the front of the list. This means you remove the node from its
+ * current position and make it the first node in the list.
  * 4. You need to implement an iterator. The iterator SHOULD NOT move
  * elements to the front.  The iterator should return elements in
  * the order they are stored in the list, starting with the first
