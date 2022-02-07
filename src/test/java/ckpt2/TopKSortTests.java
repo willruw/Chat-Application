@@ -18,7 +18,7 @@ public class TopKSortTests {
 		Integer[] arr_sorted = {7, 8, 9, 10};
 		TopKSort.sort(arr, K, Integer::compareTo);
 		for(int i = 0; i < K; i++) {
-			assertEquals(arr[i], arr_sorted[i]);
+			assertEquals(arr_sorted[i], arr[i]);
 		}
 	}
 
@@ -30,7 +30,7 @@ public class TopKSortTests {
 		Integer[] arr_sorted = {6, 7, 8, 9};
 		TopKSort.sort(arr, K, Integer::compareTo);
 		for(int i = 0; i < K; i++) {
-			assertEquals(arr[i], arr_sorted[i]);
+			assertEquals(arr_sorted[i], arr[i]);
 		}
 	}
 }
