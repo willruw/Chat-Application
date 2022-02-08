@@ -1,5 +1,6 @@
 package chat;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -72,12 +73,12 @@ public class UMessageServerConnection extends Thread {
         try {
             cmd = cmd.trim();
             switch (cmd) {
-            case "MAIN":
-                m_channel(UMessageServerConnection.CHAT_CHANNEL, text);
-                break;
-            default:
-                String[] parts = text.split(" ", 2);
-                cmd = parts[0].trim();
+                case "MAIN":
+                    m_channel(UMessageServerConnection.CHAT_CHANNEL, text);
+                    break;
+                default:
+                    String[] parts = text.split(" ", 2);
+                    cmd = parts[0].trim();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,34 +113,52 @@ public class UMessageServerConnection extends Thread {
             while ((line = this.in.readLine()) != null) {
                 if (line.startsWith("PING")) {
                     write("PONG", line.substring(5));
-                }
-                else if (line.startsWith(":umessage")) {
+                } else if (line.split(" ")[1].trim().equals("353")) {
                     int code = Integer.parseInt(line.split(" ")[1]);
                     switch (code) {
-                    // List of users...
-                    case IRCCodes.RplNamReply:
-                        String[] names = line.split(":")[2].split(" ");
-                        this.main.window.addUsers(names);
-                        break;
+                        // List of users...
+                        case IRCCodes.RplNamReply:
+                            String[] names = line.split(":")[2].split(" ");
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    main.window.addUsers(names);
+                                }
+                            });
+                            break;
                     }
-                }
-                else {
+                } else {
                     String cmd = line.split(" ")[1];
+                    final String[] lineParts = line.split(":");
                     switch (cmd) {
-                    case "PART":
-                        this.main.window.removeUser(line.split(":")[1].split("!")[0]);
-                        break;
-                    case "JOIN":
-                        this.main.window.addUser(line.split(":")[1].split("!")[0]);
-                        break;
-                    case "PRIVMSG":
-                        if (!line.split(" ")[2].equals(this.username)) {
-                            return;
-                        }
-                        String[] lineParts = line.split(":");
-                        this.main.window.gotMessage(lineParts[1].split("!")[0],
-                                lineParts[2]);
-                        break;
+                        case "PART":
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    main.window.removeUser(lineParts[1].split("!")[0]);
+                                }
+                            });
+                            break;
+                        case "JOIN":
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    main.window.addUser(lineParts[1].split("!")[0]);
+                                }
+                            });
+                            break;
+                        case "PRIVMSG":
+                            if (!line.split(" ")[2].equals(this.username)) {
+                                return;
+                            }
+                            SwingUtilities.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    main.window.gotMessage(lineParts[1].split("!")[0],
+                                            lineParts[2]);
+                                }
+                            });
+                            break;
                     }
                 }
             }
