@@ -36,7 +36,7 @@ public class NGramTester {
 
     public static void main(String[] args) {
         try {
-            WordSuggestor suggestions = new WordSuggestor("eggs.txt", 2, -1,
+            WordSuggestor suggestions = new WordSuggestor("corpus/eggs.txt", 2, -1,
                     NGramTester.trieConstructor(NGram.class),
                     NGramTester.trieConstructor(AlphabeticString.class));
             System.out.println(suggestions);
