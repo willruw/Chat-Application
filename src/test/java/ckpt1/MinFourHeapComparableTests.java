@@ -17,6 +17,115 @@ public class MinFourHeapComparableTests {
     private static final int SEED = 42;
 
     @Test()
+    public void testAdd() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+        STUDENT_INT.add(10);
+        STUDENT_INT.add(3);
+        assertEquals(3, STUDENT_INT.peek()); //ensure swap
+        STUDENT_INT.add(2);
+        assertEquals(2, STUDENT_INT.peek()); //ensure swap again
+        STUDENT_INT.add(7);
+        assertEquals(2, STUDENT_INT.peek()); //ensure no swap
+        STUDENT_INT.add(8);
+        STUDENT_INT.add(1);
+        assertEquals(1, STUDENT_INT.peek()); //ensure swap
+
+        //Now test array growth
+        STUDENT_INT.clear();
+        for (int i = 0; i < 21; i++) {
+            STUDENT_INT.add(i);
+        }
+        assertEquals(0, STUDENT_INT.peek());
+        STUDENT_INT.add(-1);
+        assertEquals(-1, STUDENT_INT.peek());//ensure percolate up
+        assertEquals(STUDENT_INT.size(), 22);
+    }
+
+    @Test()
+    public void testNext() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+        for (int i = 1; i <= 2000; i++) {
+            STUDENT_INT.add(i);
+            assertEquals(i, STUDENT_INT.size());
+        }
+        for (int i = 1; i <= 2000; i++) {
+            assertEquals(i, STUDENT_INT.peek());
+            assertEquals(STUDENT_INT.peek(), STUDENT_INT.next());
+            assertEquals(2000 - i, STUDENT_INT.size());
+        }
+        for (int i = 2000; i > 0; i--) {
+            STUDENT_INT.add(i);
+            assertEquals(STUDENT_INT.peek(), i);
+            assertEquals(2000 - (i - 1), STUDENT_INT.size());
+        }
+        for (int i = 1; i <= 2000; i++) {
+            assertEquals(i, STUDENT_INT.peek());
+            assertEquals(STUDENT_INT.peek(), STUDENT_INT.next());
+            assertEquals(2000 - i, STUDENT_INT.size());
+        }
+    }
+
+    @Test()
+    public void testDuplicate() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+        for (int i = 1; i <= 2000; i++) {
+            STUDENT_INT.add(i);
+            if (i % 2 == 0) {
+                STUDENT_INT.add(i);
+            }
+        }
+        assertEquals(STUDENT_INT.size(), 2000 + (2000 / 2));
+        for (int i = 1; i <= 2000; i++) {
+            assertEquals(i, STUDENT_INT.peek());
+            assertEquals(i, STUDENT_INT.next());
+            if (i % 2 == 0) {
+                assertEquals(i, STUDENT_INT.peek());
+                assertEquals(i, STUDENT_INT.next());
+            }
+        }
+        assertEquals(0, STUDENT_INT.size());
+        assertFalse(STUDENT_INT.hasWork());
+        for (int i = 2000; i > 0; i--) {
+            STUDENT_INT.add(i);
+            if (i % 2 == 0) {
+                STUDENT_INT.add(i);
+            }
+        }
+        assertEquals(STUDENT_INT.size(), 2000 + (2000 / 2));
+        for (int i = 1; i <= 2000; i++) {
+            assertEquals(i, STUDENT_INT.peek());
+            assertEquals(i, STUDENT_INT.next());
+            if (i % 2 == 0) {
+                assertEquals(i, STUDENT_INT.peek());
+                assertEquals(i, STUDENT_INT.next());
+            }
+        }
+        for (int i = 1; i <= 2000; i++) {
+            STUDENT_INT.add(i);
+            if (i % 2 != 0) {
+                STUDENT_INT.add(i);
+                STUDENT_INT.add(i);
+                STUDENT_INT.add(i);
+            }
+        }
+        assertEquals(STUDENT_INT.size(), 5000);
+        for (int i = 1; i <= 2000; i++) {
+            assertEquals(i, STUDENT_INT.peek());
+            assertEquals(i, STUDENT_INT.next());
+            if (i % 2 != 0) {
+                assertEquals(i, STUDENT_INT.peek());
+                assertEquals(i, STUDENT_INT.next());
+                assertEquals(i, STUDENT_INT.peek());
+                assertEquals(i, STUDENT_INT.next());
+                assertEquals(i, STUDENT_INT.peek());
+                assertEquals(i, STUDENT_INT.next());
+            }
+        }
+        assertEquals(0, STUDENT_INT.size());
+        assertFalse(STUDENT_INT.hasWork());
+    }
+
+    @Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
     public void test_hasWork_empty_noWork() {
         WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();

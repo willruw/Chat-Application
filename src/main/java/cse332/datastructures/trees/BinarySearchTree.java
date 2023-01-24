@@ -38,10 +38,8 @@ public class BinarySearchTree<K extends Comparable<? super K>, V>
         /**
          * Create a new data node.
          *
-         * @param key
-         *            key with which the specified value is to be associated
-         * @param value
-         *            data element to be stored at this node.
+         * @param key key with which the specified value is to be associated
+         * @param value data element to be stored at this node.
          */
         @SuppressWarnings("unchecked")
         public BSTNode(K key, V value) {

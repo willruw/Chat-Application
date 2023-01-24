@@ -1,6 +1,7 @@
 package ckpt1;
 
 import cse332.datastructures.containers.Item;
+import cse332.types.AlphabeticString;
 import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -8,10 +9,36 @@ import org.junit.jupiter.api.Timeout;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MoveToFrontListTests {
+
+	@Test()
+	public void testAddNumbers() {
+		MoveToFrontList<Integer, Integer> list = new MoveToFrontList<Integer, Integer>();
+		list.insert(1, 2);
+		assertEquals(2, list.find(1));
+		for (int i = 2; i < 11; i++) {
+			assertNull(list.insert(i, i + 1));
+			assertEquals(i, list.size());
+		}
+
+		for (int i = 1; i < 11; i++) {
+			assertEquals(i + 1, list.insert(i, i));
+			assertEquals(10, list.size());
+		}
+	}
+
+
+	@Test()
+	public void testAddStrings() {
+		MoveToFrontList<AlphabeticString, String> list =
+				new MoveToFrontList<AlphabeticString,
+				String>();
+		assertNull(list.insert(toAlphabeticString("This is a test"), "Test"));
+		assertEquals("Test", list.find(toAlphabeticString("This is a test")));
+	}
+
 
 	@SuppressWarnings("unchecked")
 	@Test()
@@ -68,5 +95,9 @@ public class MoveToFrontListTests {
 		assertEquals(list.size(), n);
 		assertNotNull(list.find("00851"));
 		assertEquals(list.find("00851").intValue(), 4260);
+	}
+
+	private static AlphabeticString toAlphabeticString(String s) {
+		return new AlphabeticString(s);
 	}
 }
