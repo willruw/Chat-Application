@@ -17,6 +17,12 @@ public class MinFourHeapComparableTests {
     private static final int SEED = 42;
 
     @Test()
+    public void testPercolateUp() {
+        WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
+        STUDENT_INT.add(1);
+        STUDENT_INT.add(0);
+    }
+    @Test()
     public void testAdd() {
         WorkList<Integer> STUDENT_INT = new MinFourHeapComparable<>();
         STUDENT_INT.add(10);

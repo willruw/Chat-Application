@@ -104,6 +104,9 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         if (key == null) {
             throw new IllegalArgumentException();
         }
+        if (size == 0) {
+            return false;
+        }
         Iterator<A> iterator = key.iterator();
         HashTrieNode currNode = (HashTrieNode)this.root;
         A tempKey;

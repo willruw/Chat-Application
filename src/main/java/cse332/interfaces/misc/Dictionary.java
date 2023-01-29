@@ -10,10 +10,8 @@ import java.util.Iterator;
  *
  * Dictionaries may not contain null keys or values.
  *
- * @param <K>
- *            the type of keys maintained by this map
- * @param <V>
- *            the type of mapped values
+ * @param <K> the type of keys maintained by this map
+ * @param <V> the type of mapped values
  *
  * @author Adam Blank
  */

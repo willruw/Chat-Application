@@ -29,8 +29,7 @@ public abstract class WorkList<E> implements Iterable<E> {
      * Adds work to the worklist. This method should conform to any additional
      * contracts that the particular type of worklist has.
      *
-     * @param work
-     *            the work to add to the worklist
+     * @param work the work to add to the worklist
      */
     public abstract void add(E work);
 

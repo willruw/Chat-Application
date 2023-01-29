@@ -36,12 +36,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (key == null || value == null) {
             throw new IllegalArgumentException();
         } else if (this.root == null) {
-            this.root = new AVLNode(key, value); // Create a new root
+            this.root = new AVLNode(key, value);
         } else {
             ArrayStack<AVLNode> stack = new ArrayStack<>();
-            // Locate the parent node
             AVLNode parent = null;
             AVLNode current = (AVLNode)this.root;
+            //Find if element exists in tree, else get a handle on parent
             while (current != null) {
                 if (key.compareTo(current.key) < 0) {
                     stack.add(parent);
@@ -57,7 +57,7 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
                     return temp;
                 }
             }
-            // Create the new node and attach it to the parent node
+            //If not in tree, add to last parent node
             if (key.compareTo(parent.key) < 0) {
                 current = new AVLNode(key, value);
                 stack.add(current);
@@ -74,50 +74,129 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
     }
 
     private void balanceTree(ArrayStack<AVLNode> stack) {
-
+        AVLNode current = stack.next();
+        while (current != null) {
+            setHeight(current);
+            AVLNode parent;
+            if (current == root) {
+                parent = null;
+            } else {
+                parent = stack.next();
+            }
+            setHeight(current);
+            int balance = calculateBalance(current);
+            if (balance == 2) {
+                if (calculateBalance((AVLNode) current.children[LEFT]) >= 0) {
+                    leftLeftRotation(current, parent);
+                } else {
+                    leftRightRotation(current, parent);
+                }
+            } else if (balance == -2) {
+                if (calculateBalance((AVLNode) current.children[RIGHT]) <= 0) {
+                    rightRightRotation(current, parent);
+                } else {
+                    rightLeftRotation(current, parent);
+                }
+            }
+            current = parent;
+        }
     }
 
-
-    public AVLNode find(K key, V value) {
-        AVLNode prev = null;
-        AVLNode current = (AVLNode)this.root;
-
-        int child = -1;
-
-        while (current != null) {
-            int direction = Integer.signum(key.compareTo(current.key));
-
-            // We found the key!
-            if (direction == 0) {
-                return current;
-            }
-            else {
-                // direction + 1 = {0, 2} -> {0, 1}
-                child = Integer.signum(direction + 1);
-                prev = current;
-                current = (AVLNode)current.children[child];
-            }
+    private void rightRightRotation(AVLNode node, AVLNode parent) {
+        AVLNode right = (AVLNode)node.children[RIGHT];
+        if (node == root) {
+            root = right;
+        } else if (parent.children[LEFT] == node) {
+            parent.children[LEFT] = right;
+        } else {
+            parent.children[RIGHT] = right;
         }
+        node.children[RIGHT] = right.children[LEFT];
+        right.children[LEFT] = node;
+        setHeight(node);
+        setHeight(right);
+    }
 
-        // If value is not null, we need to actually add in the new value
-        if (value != null) {
-            current = new AVLNode(key, null);
-            if (this.root == null) {
-                this.root = current;
-            }
-            else {
-                assert(child >= 0); // child should have been set in the loop
-                // above
-                prev.children[child] = current;
-            }
-            this.size++;
+    private void leftLeftRotation(AVLNode node, AVLNode parent) {
+        AVLNode left = (AVLNode)node.children[LEFT];
+        if (node == root) {
+            root = left;
+        } else if (parent.children[LEFT] == node) {
+                parent.children[LEFT] = left;
+        } else {
+                parent.children[RIGHT] = left;
         }
+        node.children[LEFT] = left.children[RIGHT];
+        left.children[RIGHT] = node;
+        setHeight(node);
+        setHeight(left);
+    }
 
-        return current;
+    private void rightLeftRotation(AVLNode node, AVLNode parent) {
+        AVLNode right = (AVLNode)node.children[RIGHT];
+        AVLNode rightLeft = (AVLNode)right.children[LEFT];
+        if (node == root) {
+            root = rightLeft;
+        }
+        else if (parent.children[LEFT] == node) {
+                parent.children[LEFT] = rightLeft;
+        } else {
+                parent.children[RIGHT] = rightLeft;
+        }
+        node.children[RIGHT] = rightLeft.children[LEFT];
+        right.children[LEFT] = rightLeft.children[RIGHT];
+        rightLeft.children[LEFT] = node;
+        rightLeft.children[RIGHT] = right;
+        setHeight(node);
+        setHeight(right);
+        setHeight(rightLeft);
+    }
+
+    private void leftRightRotation(AVLNode node, AVLNode parent) {
+        AVLNode left = (AVLNode)node.children[LEFT];
+        AVLNode leftRight = (AVLNode)left.children[RIGHT];
+        if (node == root) {
+            root = leftRight;
+        }
+        else if (parent.children[LEFT] == node) {
+                parent.children[LEFT] = leftRight;
+        } else {
+                parent.children[RIGHT] = leftRight;
+        }
+        node.children[LEFT] = leftRight.children[RIGHT];
+        left.children[RIGHT] = leftRight.children[LEFT];
+        leftRight.children[LEFT] = left;
+        leftRight.children[RIGHT] = node;
+        setHeight(node);
+        setHeight(left);
+        setHeight(leftRight);
+    }
+
+    private void setHeight(AVLNode node) {
+        if (node.children[LEFT] == null && node.children[RIGHT] == null) {
+            node.height = 0;
+        } else if (node.children[LEFT] == null) {
+            node.height = 1 + ((AVLNode)node.children[RIGHT]).height;
+        } else if (node.children[RIGHT] == null) {
+            node.height = 1 + ((AVLNode)node.children[LEFT]).height;
+        } else {
+            node.height = 1 + Math.max(((AVLNode)(node.children[RIGHT])).height,
+                            ((AVLNode)(node.children[LEFT])).height);
+        }
+    }
+
+    private int calculateBalance(AVLNode node) {
+        if (node.children[RIGHT] == null) {//Has only left child
+            return node.height;
+        } else if (node.children[LEFT] == null) {//Has only right child
+            return (-1 * node.height);
+        } else {
+            return ((AVLNode) node.children[LEFT]).height -
+                    ((AVLNode) node.children[RIGHT]).height;
+        }
     }
     private class AVLNode extends BSTNode {
 
-        AVLNode parent;
         int height;
         public AVLNode(K key, V value) {
             super(key, value);
