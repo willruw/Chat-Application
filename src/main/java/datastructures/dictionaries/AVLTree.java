@@ -25,12 +25,25 @@ import datastructures.worklists.ArrayStack;
  * that encapsulate those casts.
  * 6. Do NOT override the toString method. It is used for grading.
  * 7. The internal structure of your AVLTree (from this.root to the leaves) must be correct
+ *
+ * A balanced implementation of BinarySearchTree.
+ * @author Will Robertson
  */
 
 public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTree<K, V> {
 
+    //private fields
     private static final int LEFT = 0;
     private static final int RIGHT = 1;
+
+    /**
+     * Goes to where key should be placed in tree- if it already exists,
+     * change the value to the given value, else create a new leaf node at
+     * that spot.
+     * @param key key with which the specified value is to be associated
+     * @param value value to be associated with the specified key
+     * @return The old value of key if already in tree, else null.
+     */
     @Override
     public V insert(K key, V value) {
         if (key == null || value == null) {
@@ -73,6 +86,11 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         return null;
     }
 
+    /**
+     * Starting at where the new node was just placed, iterates through the
+     * node path and checks if balancing is needed.
+     * @param stack that contains the node path back to the root.
+     */
     private void balanceTree(ArrayStack<AVLNode> stack) {
         AVLNode current = stack.next();
         while (current != null) {
@@ -102,6 +120,11 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         }
     }
 
+    /**
+     * Rotation for right side and right heavy.
+     * @param node Node where imbalance occurs
+     * @param parent parent of node
+     */
     private void rightRightRotation(AVLNode node, AVLNode parent) {
         AVLNode right = (AVLNode)node.children[RIGHT];
         if (node == root) {
@@ -117,6 +140,11 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         setHeight(right);
     }
 
+    /**
+     * Rotation for left side and left heavy.
+     * @param node Node where the imbalance occurs
+     * @param parent parent of node
+     */
     private void leftLeftRotation(AVLNode node, AVLNode parent) {
         AVLNode left = (AVLNode)node.children[LEFT];
         if (node == root) {
@@ -132,6 +160,11 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         setHeight(left);
     }
 
+    /**
+     * Rotation for right side and left heavy.
+     * @param node Node where the imbalance occurs
+     * @param parent parent of the node
+     */
     private void rightLeftRotation(AVLNode node, AVLNode parent) {
         AVLNode right = (AVLNode)node.children[RIGHT];
         AVLNode rightLeft = (AVLNode)right.children[LEFT];
@@ -152,6 +185,11 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         setHeight(rightLeft);
     }
 
+    /**
+     * Rotation for left side and right heavy.
+     * @param node Node where the imbalance occurs
+     * @param parent parent of the node
+     */
     private void leftRightRotation(AVLNode node, AVLNode parent) {
         AVLNode left = (AVLNode)node.children[LEFT];
         AVLNode leftRight = (AVLNode)left.children[RIGHT];
@@ -172,6 +210,10 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         setHeight(leftRight);
     }
 
+    /**
+     * Sets the given nodes height to the accurate height.
+     * @param node Node whose height to set
+     */
     private void setHeight(AVLNode node) {
         if (node.children[LEFT] == null && node.children[RIGHT] == null) {
             node.height = 0;
@@ -185,6 +227,11 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         }
     }
 
+    /**
+     * Calculates the AVL Balance property of the given node.
+     * @param node Node whose balance to calculate
+     * @return the balance of the node
+     */
     private int calculateBalance(AVLNode node) {
         if (node.children[RIGHT] == null) {//Has only left child
             return node.height;
@@ -195,9 +242,16 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
                     ((AVLNode) node.children[RIGHT]).height;
         }
     }
+
+    /**
+     * Nested class that extends BSTNode and adds a height field for AVL
+     * property calculations.
+     *
+     * @author Will Robertson
+     */
     private class AVLNode extends BSTNode {
 
-        int height;
+        protected int height;
         public AVLNode(K key, V value) {
             super(key, value);
         }

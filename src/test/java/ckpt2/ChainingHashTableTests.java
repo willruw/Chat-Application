@@ -23,6 +23,18 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
+	public void addSimple() {
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(MoveToFrontList::new);
+		for (int i = 0; i < 30; i++) {
+			list.insert(i, i + 1);
+		}
+		for (int i = 0; i < 30; i++) {
+			assertNotNull(list.find(i));
+		}
+	}
+
+	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
 	public void test_insertFind_manyElements_correctStructure() {
 		ChainingHashTable<String, Integer> list = new ChainingHashTable<>(MoveToFrontList::new);

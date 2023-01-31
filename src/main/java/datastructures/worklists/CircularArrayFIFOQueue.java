@@ -1,6 +1,5 @@
 package datastructures.worklists;
 
-import cse332.exceptions.NotYetImplementedException;
 import cse332.interfaces.worklists.FixedSizeFIFOWorkList;
 
 import java.util.NoSuchElementException;
@@ -167,7 +166,11 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
 
     @Override
     public int hashCode() {
-        // You will implement this method in project 2. Leave this method unchanged for project 1.
-        throw new NotYetImplementedException();
+        int hashcode = 1;
+        for (int i = 0; i < this.size(); i++) {
+            hashcode = 31 * hashcode + (this.peek(i)==null ? 0 :
+                    this.peek(i).hashCode());
+        }
+        return hashcode;
     }
 }
