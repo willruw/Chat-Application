@@ -30,15 +30,16 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     private Supplier<Dictionary<K, V>> newChain;
     private Dictionary<K, V>[] table = (Dictionary<K, V>[]) new Dictionary[DEFAULT_CAPACITY];
-    private WorkList<Item<K, V>> entrySet = new ListFIFOQueue<>();
+    //private WorkList<Item<K, V>> entrySet = new ListFIFOQueue<>();
     private K[] keys = (K[]) new Comparable[DEFAULT_CAPACITY];
     private int keyIndex = 0;
     private final static int DEFAULT_CAPACITY = 29;
     private final static int[] primes = {59, 127, 257, 521, 1049, 2099, 4201,
             8419, 16843, 33703, 67409, 134837, 200003};
     private int prime = 0;
-    private int powerOf2 = 18;
+    private int powerOf2 = 262144;
     private final static float LOAD_FACTOR = 0.75f;
+    private boolean primeRehash = true;
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
         this.newChain = newChain;
     }
@@ -53,8 +54,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
         }
         int index = hash(key.hashCode(), table.length);
         if (table[index] != null) {
-            V temp = table[index].find(key);
-            table[index].insert(key, value);
+            V temp = table[index].insert(key, value); //Test
             if (temp != null) {
                 return temp;
             } else {
@@ -77,14 +77,11 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     private void insertRehash(K key, V value) {
         int index = hash(key.hashCode(), table.length);
-        if (table[index] != null) {
-            table[index].insert(key, value);
-            size++;
-        } else {
+        if (table[index] == null) {
             table[index] = newChain.get();
-            table[index].insert(key, value);
-            size++;
         }
+        table[index].insert(key, value);
+        size++;
     }
     @Override
     public V find(K key) {
@@ -100,11 +97,19 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     }
 
     private int hash(int hashcode, int capacity) {
-        if (prime <= 12) {
+        if (primeRehash) {
             return (hashcode & 0x7fffffff) % capacity; //Make sign-bit zero
         } else {
             return supplementalHash(hashcode) & (capacity - 1);
         }
+    }
+
+    private int hashPrimeRehash(int hashcode, int capacity) {
+        return (hashcode & 0x7fffffff) % capacity;
+    }
+
+    private int hashPowerOf2Rehash(int hashcode, int capacity) {
+        return supplementalHash(hashcode) & (capacity - 1);
     }
 
     private int supplementalHash(int h) {
@@ -118,12 +123,14 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             table = new Dictionary[primes[prime]];
             K[] newKeySet = (K[]) new Comparable[primes[prime]];
             prime++;
+            if (prime == 13) {
+                primeRehash = false;
+            }
             this.size = 0;
             for (int i = 0; i < keyIndex; i++) {
                 this.insertRehash(keys[i],
-                        tempTable[hash(keys[i].hashCode(), tempTable.length)].find(keys[i]));
-            }
-            for (int i = 0; i < keyIndex; i++) {
+                        tempTable[hashPrimeRehash(keys[i].hashCode(),
+                                tempTable.length)].find(keys[i]));
                 newKeySet[i] = keys[i];
             }
             keys = newKeySet;
@@ -134,9 +141,8 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             this.size = 0;
             for (int i = 0; i < keyIndex; i++) {
                 this.insertRehash(keys[i],
-                        tempTable[hash(keys[i].hashCode(), tempTable.length)].find(keys[i]));
-            }
-            for (int i = 0; i < keyIndex; i++) {
+                        tempTable[hashPowerOf2Rehash(keys[i].hashCode(),
+                                tempTable.length)].find(keys[i]));
                 newKeySet[i] = keys[i];
             }
             keys = newKeySet;
