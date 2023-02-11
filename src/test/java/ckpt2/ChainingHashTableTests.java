@@ -47,6 +47,7 @@ public class ChainingHashTableTests {
 		}
 		for (int i = 0; i < 300000; i++) {
 			assertNotNull(list.find(i));
+			assertEquals(list.find(i), i + 1);
 		}
 	}
 
@@ -102,13 +103,40 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
+	public void iteratorUpdatedTest() {
+		int countKey1 = 0;
+		int countValue1 = 0;
+		int countKey2 = 0;
+		int countValue2 = 0;
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(MoveToFrontList::new);
+		for (int i = 0; i < 100; i++) {
+			countKey1 += i;
+			countValue1 += (i + 1);
+			list.insert(i, i + 1);
+		}
+		Iterator<Item<Integer, Integer>> itr = list.iterator();
+		Item<Integer, Integer> item;
+		int count = 0;
+		while (itr.hasNext()) {
+			item = itr.next();
+			countKey2 += item.key;
+			countValue2 += item.value;
+			count++;
+		}
+		assertEquals(countKey1, countKey2);
+		assertEquals(countValue1, countValue2);
+	}
+
+	@Test()
 	public void insertIntoSameIndex() {
 		ChainingHashTable<Integer, Integer> list =
 				new ChainingHashTable<>(MoveToFrontList::new);
-		int firstPrime = 0;
-		int secondPrime = 59;
-		int thirdPrime = 127;
-		int fourthPrime = 257;
+		int firstPrime = 0, secondPrime = 59, thirdPrime = 127, fourthPrime =
+				257, fifthPrime = 521, sixthPrime = 1049, seventhPrime = 2099
+				, eighthPrime = 4201, ninthPrime = 8419, tenthPrime = 16843,
+				eleventhPrime = 33703, twelfthPrime = 67409, thirteenthPrime
+				= 134837, fourteenthPrime = 200003;
 		for (int i = 0; i < 300000; i++) {
 			if (i < 21) {
 				list.insert(firstPrime, i);
@@ -122,6 +150,39 @@ public class ChainingHashTableTests {
 			} else if (i < 192) {
 				list.insert(fourthPrime, i);
 				fourthPrime += 257;
+			} else if (i < 390) {
+				list.insert(fifthPrime, i);
+				fifthPrime += 521;
+			} else if (i < 786) {
+				list.insert(sixthPrime, i);
+				sixthPrime += 1049;
+			} else if (i < 1574) {
+				list.insert(seventhPrime, i);
+				seventhPrime += 2099;
+			} else if (i < 3150) {
+				list.insert(eighthPrime, i);
+				eighthPrime += 4201;
+			} else if (i < 6314) {
+				list.insert(ninthPrime, i);
+				ninthPrime += 8419;
+			} else if (i < 12632) {
+				list.insert(tenthPrime, i);
+				tenthPrime += 16843;
+			} else if (i < 25277) {
+				list.insert(eleventhPrime, i);
+				eleventhPrime += 33703;
+			} else if (i < 50556) {
+				list.insert(twelfthPrime, i);
+				twelfthPrime += 67409;
+			} else if (i < 101127) {
+				list.insert(thirteenthPrime, i);
+				thirteenthPrime += 134837;
+			} else if (i < 150002) {
+				list.insert(fourteenthPrime, i);
+				fourteenthPrime += 200003;
+			}
+			else {
+				list.insert(i * 2, i);
 			}
 		}
 	}

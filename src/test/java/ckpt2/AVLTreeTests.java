@@ -25,6 +25,15 @@ public class AVLTreeTests {
 		}
 	}
 
+	@Test()
+	public void worstCase() {
+		AVLTree<Integer, Integer> tree = new AVLTree<>();
+		for (int i = 1; i <= 30; i++) {
+			tree.insert(i, i + 100);
+		}
+		assertEquals(30, tree.size());
+	}
+
 	@SuppressWarnings("rawtypes")
 	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)

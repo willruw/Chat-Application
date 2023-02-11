@@ -72,13 +72,15 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             }
             //If not in tree, add to last parent node
             if (key.compareTo(parent.key) < 0) {
+                stack.add(parent);
                 current = new AVLNode(key, value);
                 stack.add(current);
                 parent.children[LEFT] = current;
             } else {
+                stack.add(parent);
                 current = new AVLNode(key, value);
                 stack.add(current);
-                parent.children[RIGHT] = new AVLNode(key, value);
+                parent.children[RIGHT] = current;
             }
             balanceTree(stack);
         }
@@ -101,7 +103,6 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             } else {
                 parent = stack.next();
             }
-            setHeight(current);
             int balance = calculateBalance(current);
             if (balance == 2) {
                 if (calculateBalance((AVLNode) current.children[LEFT]) >= 0) {
@@ -129,10 +130,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         AVLNode right = (AVLNode)node.children[RIGHT];
         if (node == root) {
             root = right;
-        } else if (parent.children[LEFT] == node) {
-            parent.children[LEFT] = right;
         } else {
-            parent.children[RIGHT] = right;
+            if (parent.children[LEFT] == node) {
+                parent.children[LEFT] = right;
+            } else {
+                parent.children[RIGHT] = right;
+            }
         }
         node.children[RIGHT] = right.children[LEFT];
         right.children[LEFT] = node;
@@ -149,10 +152,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         AVLNode left = (AVLNode)node.children[LEFT];
         if (node == root) {
             root = left;
-        } else if (parent.children[LEFT] == node) {
-                parent.children[LEFT] = left;
         } else {
+            if (parent.children[LEFT] == node) {
+                parent.children[LEFT] = left;
+            } else {
                 parent.children[RIGHT] = left;
+            }
         }
         node.children[LEFT] = left.children[RIGHT];
         left.children[RIGHT] = node;
@@ -171,10 +176,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (node == root) {
             root = rightLeft;
         }
-        else if (parent.children[LEFT] == node) {
+        else {
+            if (parent.children[LEFT] == node) {
                 parent.children[LEFT] = rightLeft;
-        } else {
+            } else {
                 parent.children[RIGHT] = rightLeft;
+            }
         }
         node.children[RIGHT] = rightLeft.children[LEFT];
         right.children[LEFT] = rightLeft.children[RIGHT];
@@ -196,10 +203,12 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         if (node == root) {
             root = leftRight;
         }
-        else if (parent.children[LEFT] == node) {
+        else {
+            if (parent.children[LEFT] == node) {
                 parent.children[LEFT] = leftRight;
-        } else {
+            } else {
                 parent.children[RIGHT] = leftRight;
+            }
         }
         node.children[LEFT] = leftRight.children[RIGHT];
         left.children[RIGHT] = leftRight.children[LEFT];
@@ -233,15 +242,17 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
      * @return the balance of the node
      */
     private int calculateBalance(AVLNode node) {
-        if (node.children[RIGHT] == null) {//Has only left child
-            return node.height;
-        } else if (node.children[LEFT] == null) {//Has only right child
-            return (-1 * node.height);
+
+        if (node.children[RIGHT] == null) {
+            return +node.height;
+        } else if (node.children[LEFT] == null) {
+            return -node.height;
         } else {
             return ((AVLNode) node.children[LEFT]).height -
                     ((AVLNode) node.children[RIGHT]).height;
         }
     }
+
 
     /**
      * Nested class that extends BSTNode and adds a height field for AVL
