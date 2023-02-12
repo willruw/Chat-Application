@@ -25,7 +25,6 @@ public class HashTrieMap<A extends Comparable<A>, K extends BString<A>, V> exten
         }
 
         public HashTrieNode(V value) {
-            //this.pointers = new HashMap<A, HashTrieNode>();
             this.pointers =
                     new ChainingHashTable<A, HashTrieNode>(AVLTree::new);
             this.value = value;

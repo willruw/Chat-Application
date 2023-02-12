@@ -28,7 +28,7 @@ public class AVLTreeTests {
 	@Test()
 	public void worstCase() {
 		AVLTree<Integer, Integer> tree = new AVLTree<>();
-		for (int i = 1; i <= 30; i++) {
+		for (int i = 30; i >= 1; i--) {
 			tree.insert(i, i + 100);
 		}
 		assertEquals(30, tree.size());
