@@ -11,6 +11,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class HeapSortTests {
 
 	@Test()
+	public void insertDuplicates() {
+		Integer[] arr = {1, 1, 1, 4, 5, 6, 7, 1, 9, 10};
+		Integer[] arr_sorted = {1, 1, 1, 1, 4, 5, 6, 7, 9, 10};
+		HeapSort.sort(arr, Integer::compareTo);
+		for(int i = 0; i < arr.length; i++) {
+			assertEquals(arr[i], arr_sorted[i]);
+		}
+	}
+
+	@Test()
+	public void insertOnlyDuplicates() {
+		Integer[] arr = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+		Integer[] arr_sorted = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+		HeapSort.sort(arr, Integer::compareTo);
+		for(int i = 0; i < arr.length; i++) {
+			assertEquals(arr[i], arr_sorted[i]);
+		}
+	}
+
+	@Test()
     @Timeout(value = 3000, unit = TimeUnit.MILLISECONDS)
 	public void test_sort_integerSorted_correctSort() {
 		Integer[] arr = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};

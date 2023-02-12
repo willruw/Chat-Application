@@ -5,16 +5,16 @@ import cse332.datastructures.trees.BinarySearchTree;
 import cse332.interfaces.misc.Dictionary;
 import datastructures.dictionaries.AVLTree;
 import datastructures.dictionaries.ChainingHashTable;
-import datastructures.dictionaries.HashTrieMap;
 import datastructures.dictionaries.MoveToFrontList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ChainingHashTableTests {
 
@@ -76,40 +76,13 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
-	public void iteratorTest() {
-		ChainingHashTable<Integer, Integer> list =
-				new ChainingHashTable<>(MoveToFrontList::new);
-		for (int i = 0; i < 300000; i++) {
-			list.insert(i, i + 1);
-		}
-		Item<Integer, Integer> item;
-		Iterator<Item<Integer, Integer>> iterator = list.iterator();
-		for (int i = 0; i < 300000; i++) {
-			item = new Item<>(i, i + 1);
-			assertEquals(item, iterator.next());
-		}
-
-		list = new ChainingHashTable<>(MoveToFrontList::new);
-		for (int i = 0; i < 300000; i++) {
-			list.insert(i, i + 1);
-		}
-		int i = 0;
-		iterator = list.iterator();
-		while (iterator.hasNext()) {
-			item = new Item<>(i, i + 1);
-			assertEquals(item, iterator.next());
-			i++;
-		}
-	}
-
-	@Test()
 	public void iteratorUpdatedTest() {
 		int countKey1 = 0;
 		int countValue1 = 0;
 		int countKey2 = 0;
 		int countValue2 = 0;
 		ChainingHashTable<Integer, Integer> list =
-				new ChainingHashTable<>(MoveToFrontList::new);
+				new ChainingHashTable<>(AVLTree::new);
 		for (int i = 0; i < 100; i++) {
 			countKey1 += i;
 			countValue1 += (i + 1);
@@ -126,6 +99,48 @@ public class ChainingHashTableTests {
 		}
 		assertEquals(countKey1, countKey2);
 		assertEquals(countValue1, countValue2);
+		assertThrows(NoSuchElementException.class, () -> {
+			itr.next();
+		});
+	}
+
+	@Test()
+	public void iteratorTestSpacesBetweenElements() {
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(AVLTree::new);
+		list.insert(0, 0);
+		list.insert(2, 2);
+		list.insert(4, 4);
+		Iterator<Item<Integer, Integer>> itr = list.iterator();
+		assertDoesNotThrow(() -> {
+			itr.next();
+		});
+		assertDoesNotThrow(() -> {
+			itr.next();
+		});
+		assertDoesNotThrow(() -> {
+			itr.next();
+		});
+		assertThrows(NoSuchElementException.class, () -> {
+			itr.next();
+		});
+		list = new ChainingHashTable<>(AVLTree::new);
+		list.insert(0, 0);
+		list.insert(2, 2);
+		list.insert(4, 4);
+		Iterator<Item<Integer, Integer>> itr2 = list.iterator();
+		Item<Integer, Integer> item = itr2.next();
+		assertEquals(0, item.key);
+		assertEquals(0, item.value);
+		item = itr2.next();
+		assertEquals(2, item.key);
+		assertEquals(2, item.value);
+		item = itr2.next();
+		assertEquals(4, item.key);
+		assertEquals(4, item.value);
+		assertThrows(NoSuchElementException.class, () -> {
+			itr.next();
+		});
 	}
 
 	@Test()
