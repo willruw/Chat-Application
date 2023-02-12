@@ -113,6 +113,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
     /**
      * Supplemental hash function to insert additional randomness into the
      * index.
+     *
      * @param h the hashcode of the key.
      * @return a new (more random) int that can be used in calculating an index.
      */
@@ -126,7 +127,8 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
      * a hardcoded list of prime numbers, then switches to powers of 2.
      */
     private void rehashMap() {
-        //Haven't reached end of primes
+        //If we haven't resized to the last prime in the list, go to the next
+        // prime, else use a power of 2
         if (table.length < primes[LAST_PRIME]) {
             Dictionary<K, V>[] tempTable = table;
             table = new Dictionary[primes[prime]];
@@ -143,7 +145,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
                     }
                 }
             }
-            //Use power of 2
         } else {
             Dictionary<K, V>[] tempTable = table;
             Iterator<Item<K, V>> itr;
