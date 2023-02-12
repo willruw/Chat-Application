@@ -154,12 +154,15 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
             if (this.size() != other.size()) {
                 return false;
             } else {
+                /*
                 for (int i = 0; i < this.size(); i++) {
                     if (!(this.peek(i).equals(other.peek(i)))) {
                         return false;
                     }
                 }
                 return true;
+                */
+                return this.compareTo(other) == 0;
             }
         }
     }

@@ -11,6 +11,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TopKSortTests {
 
 	@Test()
+	public void insertWhenKIsEqualToN() {
+		int K = 10;
+		Integer[] arr = {1, 1, 1, 4, 5, 1, 1, 1, 9, 10};
+		Integer[] arr_sorted = {1, 1, 1, 1, 1, 1, 4, 5, 9, 10};
+		TopKSort.sort(arr, K, Integer::compareTo);
+		for(int i = 0; i < K; i++) {
+			assertEquals(arr_sorted[i], arr[i]);
+		}
+	}
+	@Test()
 	public void insertDuplicates() {
 		int K = 5;
 		Integer[] arr = {1, 1, 1, 4, 5, 1, 1, 1, 9, 10};
