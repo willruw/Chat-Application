@@ -27,7 +27,7 @@ public class QuickSort {
         int pivot = median(array, c, lo, (hi + lo) / 2, hi); //get pivot
         swap(array, pivot, lo); //move pivot to the lo position
         pivot = lo;
-        lo++; //change lo to lo + 1
+        lo++; //change to lo + 1
         while (hi > lo) {
             while (c.compare(array[lo], array[pivot]) <= 0 && lo < hi) {
                 lo++;
@@ -39,7 +39,7 @@ public class QuickSort {
                 swap(array, lo, hi);
             }
         }
-        swap(array, pivot, lo - 1);
+        swap(array, pivot, lo - 1); //put pivot in middle
         pivot = (lo - 1);
         return pivot;
     }

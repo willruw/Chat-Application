@@ -39,7 +39,7 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
-	public void rehashPastPrimesMoveToFrontList() {
+	public void rehashUsingMoveToFrontList() {
 		ChainingHashTable<Integer, Integer> list =
 				new ChainingHashTable<>(MoveToFrontList::new);
 		for (int i = 0; i < 300000; i++) {
@@ -52,7 +52,7 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
-	public void rehashPastPrimesAVLTree() {
+	public void rehashUsingAVLTree() {
 		ChainingHashTable<Integer, Integer> list =
 				new ChainingHashTable<>(AVLTree::new);
 		for (int i = 0; i < 300000; i++) {
@@ -64,7 +64,7 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
-	public void rehashPastPrimesBSTTree() {
+	public void rehashUsingBSTTree() {
 		ChainingHashTable<Integer, Integer> list =
 				new ChainingHashTable<>(BinarySearchTree::new);
 		for (int i = 0; i < 300000; i++) {

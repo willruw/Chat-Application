@@ -37,7 +37,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
             8419, 16843, 33703, 67409, 134837, 200003};
     private final static int LAST_PRIME = 12;
     private int prime = 0;
-    private int powerOf2 = 262144;
+    private int powerOf2 = 262144; //2^18
     private final static float LOAD_FACTOR = 0.75f;
 
     public ChainingHashTable(Supplier<Dictionary<K, V>> newChain) {
@@ -46,7 +46,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     /**
      * Inserts the given key with the given value into the table.
-     *
      * @param key key with which the specified value is to be associated
      * @param value value to be associated with the specified key
      * @return null if key doesn't already exist in map, else previous value
@@ -78,7 +77,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     /**
      * Checks if the given key exists in the table.
-     *
      * @param key the key whose associated value is to be returned
      * @return the value associated with the given key if it exists in the
      * table, else null.
@@ -98,7 +96,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     /**
      * Returns the index for the given key's hashcode.
-     *
      * @param hashcode the hashcode of the key.
      * @return the index in the table that the key belongs to.
      */
@@ -112,8 +109,7 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     /**
      * Supplemental hash function to insert additional randomness into the
-     * index.
-     *
+     * index when the table size is a power of 2.
      * @param h the hashcode of the key.
      * @return a new (more random) int that can be used in calculating an index.
      */
@@ -166,7 +162,6 @@ public class ChainingHashTable<K, V> extends DeletelessDictionary<K, V> {
 
     /**
      * Gets the iterator for the ChainingHashTable.
-     *
      * @return the iterator for this hash table.
      */
     @Override
