@@ -25,7 +25,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Checks if there is any work in the heap.
-     *
      * @return true if size is greater than 0, else false.
      */
     @Override
@@ -35,7 +34,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Adds the work to the end of the heap then percolates up.
-     *
      * @param work the work to add to the worklist
      */
     @Override
@@ -60,7 +58,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * If there is at least one element in the worklist, return the top of heap.
-     *
      * @return the top element on the heap
      */
     @Override
@@ -76,7 +73,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
      * Retrieves and removes the element at the top of the heap, then
      * replaces it with the last element of the heap and percolates down to
      * maintain heap property.
-     *
      * @return the element at the top of the heap.
      */
     @Override
@@ -100,7 +96,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Swaps with the min-child if smaller than the current element.
-     *
      * @param index the current parent index
      */
     private void percolateDown(int index) {
@@ -115,7 +110,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Standard getter for the size of the heap.
-     *
      * @return the number of elements in the heap.
      */
     @Override
@@ -149,7 +143,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Utility method to get the parent index of a particular child index.
-     *
      * @param index the child index to get the parent of.
      * @return the parent index of the child index.
      */
@@ -159,7 +152,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Utility method to get a child index from the parent index.
-     *
      * @param parentIndex the parent index to get the child of.
      * @param child       the specifier of which child index to calculate.
      * @return the requested child index.
@@ -170,7 +162,6 @@ public class MinFourHeap<E> extends PriorityWorkList<E> {
 
     /**
      * Utility method to get the min-child of a parent index.
-     *
      * @param index the parent index to get the min-child from.
      * @return the min-child of the parent, or the parent index if there is
      * no suitable child (non-existent).

@@ -130,13 +130,17 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
     @Override
     public int compareTo(FixedSizeFIFOWorkList<E> other) {
         // You will implement this method in project 2. Leave this method unchanged for project 1.
-        int size = (this.size() <= other.size()) ? this.size() : other.size();
-        for (int i = 0; i < size; i++) {
-            if (this.peek(i).compareTo(other.peek(i)) != 0) {
-                return this.peek(i).compareTo(other.peek(i));
+        if (other == null) {
+            throw new NullPointerException();
+        } else {
+            int size = (this.size() <= other.size()) ? this.size() : other.size();
+            for (int i = 0; i < size; i++) {
+                if (this.peek(i).compareTo(other.peek(i)) != 0) {
+                    return this.peek(i).compareTo(other.peek(i));
+                }
             }
+            return this.size() - other.size();
         }
-        return this.size() - other.size();
     }
 
 
@@ -154,14 +158,6 @@ public class CircularArrayFIFOQueue<E extends Comparable<E>> extends FixedSizeFI
             if (this.size() != other.size()) {
                 return false;
             } else {
-                /*
-                for (int i = 0; i < this.size(); i++) {
-                    if (!(this.peek(i).equals(other.peek(i)))) {
-                        return false;
-                    }
-                }
-                return true;
-                */
                 return this.compareTo(other) == 0;
             }
         }

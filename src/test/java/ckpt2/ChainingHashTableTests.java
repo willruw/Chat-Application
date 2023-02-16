@@ -3,9 +3,8 @@ package ckpt2;
 import cse332.datastructures.containers.Item;
 import cse332.datastructures.trees.BinarySearchTree;
 import cse332.interfaces.misc.Dictionary;
-import datastructures.dictionaries.AVLTree;
-import datastructures.dictionaries.ChainingHashTable;
-import datastructures.dictionaries.MoveToFrontList;
+import cse332.types.AlphabeticString;
+import datastructures.dictionaries.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -44,6 +43,7 @@ public class ChainingHashTableTests {
 				new ChainingHashTable<>(MoveToFrontList::new);
 		for (int i = 0; i < 300000; i++) {
 			list.insert(i, i + 1);
+			assertEquals(i + 1, list.find(i));
 		}
 		for (int i = 0; i < 300000; i++) {
 			assertNotNull(list.find(i));
@@ -57,6 +57,7 @@ public class ChainingHashTableTests {
 				new ChainingHashTable<>(AVLTree::new);
 		for (int i = 0; i < 300000; i++) {
 			list.insert(i, i + 1);
+			assertEquals(i + 1, list.find(i));
 		}
 		for (int i = 0; i < 300000; i++) {
 			assertNotNull(list.find(i));
@@ -69,6 +70,7 @@ public class ChainingHashTableTests {
 				new ChainingHashTable<>(BinarySearchTree::new);
 		for (int i = 0; i < 300000; i++) {
 			list.insert(i, i + 1);
+			assertEquals(i + 1, list.find(i));
 		}
 		for (int i = 0; i < 300000; i++) {
 			assertNotNull(list.find(i));
@@ -76,13 +78,128 @@ public class ChainingHashTableTests {
 	}
 
 	@Test()
-	public void iteratorUpdatedTest() {
+	public void rehashUsingHashTrieMap() {
+		ChainingHashTable<AlphabeticString, Integer> list =
+				new ChainingHashTable<>(() -> new HashTrieMap<>(AlphabeticString.class));
+
+		for (int i = 0; i < 300000; i++) {
+			list.insert(toAlphabeticString("i"), i + 1);
+			assertEquals(i + 1, list.find(toAlphabeticString("i")));
+		}
+		for (int i = 0; i < 300000; i++) {
+			assertNotNull(list.find(toAlphabeticString("i")));
+		}
+	}
+
+	@Test()
+	public void rehashUsingCHT() {
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(() -> new ChainingHashTable<>(AVLTree
+		::new));
+		for (int i = 0; i < 300000; i++) {
+			list.insert(i, i + 1);
+			assertEquals(i + 1, list.find(i));
+		}
+		for (int i = 0; i < 300000; i++) {
+			assertNotNull(list.find(i));
+		}
+	}
+
+	@Test()
+	public void iteratorUpdatedTestAVL() {
 		int countKey1 = 0;
 		int countValue1 = 0;
 		int countKey2 = 0;
 		int countValue2 = 0;
 		ChainingHashTable<Integer, Integer> list =
 				new ChainingHashTable<>(AVLTree::new);
+		for (int i = 0; i < 100; i++) {
+			countKey1 += i;
+			countValue1 += (i + 1);
+			list.insert(i, i + 1);
+		}
+		Iterator<Item<Integer, Integer>> itr = list.iterator();
+		Item<Integer, Integer> item;
+		int count = 0;
+		while (itr.hasNext()) {
+			item = itr.next();
+			countKey2 += item.key;
+			countValue2 += item.value;
+			count++;
+		}
+		assertEquals(countKey1, countKey2);
+		assertEquals(countValue1, countValue2);
+		assertThrows(NoSuchElementException.class, () -> {
+			itr.next();
+		});
+	}
+
+	@Test()
+	public void iteratorUpdatedTestMTFL() {
+		int countKey1 = 0;
+		int countValue1 = 0;
+		int countKey2 = 0;
+		int countValue2 = 0;
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(MoveToFrontList::new);
+		for (int i = 0; i < 100; i++) {
+			countKey1 += i;
+			countValue1 += (i + 1);
+			list.insert(i, i + 1);
+		}
+		Iterator<Item<Integer, Integer>> itr = list.iterator();
+		Item<Integer, Integer> item;
+		int count = 0;
+		while (itr.hasNext()) {
+			item = itr.next();
+			countKey2 += item.key;
+			countValue2 += item.value;
+			count++;
+		}
+		assertEquals(countKey1, countKey2);
+		assertEquals(countValue1, countValue2);
+		assertThrows(NoSuchElementException.class, () -> {
+			itr.next();
+		});
+	}
+
+	@Test()
+	public void iteratorUpdatedTestBST() {
+		int countKey1 = 0;
+		int countValue1 = 0;
+		int countKey2 = 0;
+		int countValue2 = 0;
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(BinarySearchTree::new);
+		for (int i = 0; i < 100; i++) {
+			countKey1 += i;
+			countValue1 += (i + 1);
+			list.insert(i, i + 1);
+		}
+		Iterator<Item<Integer, Integer>> itr = list.iterator();
+		Item<Integer, Integer> item;
+		int count = 0;
+		while (itr.hasNext()) {
+			item = itr.next();
+			countKey2 += item.key;
+			countValue2 += item.value;
+			count++;
+		}
+		assertEquals(countKey1, countKey2);
+		assertEquals(countValue1, countValue2);
+		assertThrows(NoSuchElementException.class, () -> {
+			itr.next();
+		});
+	}
+
+	@Test()
+	public void iteratorUpdatedTestMultipleCHT() {
+		int countKey1 = 0;
+		int countValue1 = 0;
+		int countKey2 = 0;
+		int countValue2 = 0;
+		ChainingHashTable<Integer, Integer> list =
+				new ChainingHashTable<>(() -> new ChainingHashTable<>(() -> new ChainingHashTable<>(AVLTree::new)));
 		for (int i = 0; i < 100; i++) {
 			countKey1 += i;
 			countValue1 += (i + 1);
@@ -230,4 +347,9 @@ public class ChainingHashTableTests {
 		assertNotNull(list.find("00851"));
 		assertEquals(4260, (int) list.find("00851"));
 	}
+
+	private static AlphabeticString toAlphabeticString(String s) {
+		return new AlphabeticString(s);
+	}
+
 }
