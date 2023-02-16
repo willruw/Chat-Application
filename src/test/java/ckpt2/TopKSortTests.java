@@ -7,8 +7,33 @@ import p2.sorts.TopKSort;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TopKSortTests {
+
+	@Test()
+	public void testKIsZero() {
+		int K = 0;
+		Integer[] arr = {1, 1, 1, 4, 5, 1, 1, 1, 9, 10};
+		TopKSort.sort(arr, K, Integer::compareTo);
+		for(int i = 0; i < arr.length; i++) {
+			assertNull(arr[i]);
+		}
+	}
+
+	@Test()
+	public void testKIsOne() {
+		int K = 1;
+		Integer[] arr = {1, 1, 1, 4, 5, 1, 1, 1, 9, 10};
+		TopKSort.sort(arr, K, Integer::compareTo);
+		for(int i = 0; i < arr.length; i++) {
+			if (i == 0) {
+				assertEquals(10, arr[i]);
+			} else {
+				assertNull(arr[i]);
+			}
+		}
+	}
 
 	@Test()
 	public void insertWhenKIsEqualToN() {

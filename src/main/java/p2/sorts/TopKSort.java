@@ -21,7 +21,8 @@ public class TopKSort {
             }
         }
         for (int i = k; i < array.length; i++) {
-            if (array[i] != null && comparator.compare(array[i], heap.peek()) > 0) {
+            if (array[i] != null && heap.hasWork() && comparator.compare(array[i],
+                    heap.peek()) > 0) {
                 heap.next();
                 heap.add(array[i]);
             }
