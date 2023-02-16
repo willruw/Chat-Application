@@ -7,6 +7,7 @@ import p2.sorts.QuickSort;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class QuickSortTests {
 
@@ -27,6 +28,26 @@ public class QuickSortTests {
 		QuickSort.sort(arr, Integer::compareTo);
 		for(int i = 0; i < arr.length; i++) {
 			assertEquals(arr[i], arr_sorted[i]);
+		}
+	}
+
+	@Test()
+	public void insertRandomWithDuplicates() {
+		Integer[] arr = new Integer[10000];
+		for (int i = arr.length - 1; i >= 0; i--) {
+			if (i % 5 == 0) {
+				arr[i] = 5;
+			} else if (i % 3 == 0) {
+				arr[i] = 3;
+			} else {
+				arr[i] = i;
+			}
+		}
+		QuickSort.sort(arr, Integer::compareTo);
+		int prev = arr[0];
+		for (int i = 0; i < arr.length; i++) {
+			assertTrue(arr[i] >= prev);
+			prev = arr[i];
 		}
 	}
 

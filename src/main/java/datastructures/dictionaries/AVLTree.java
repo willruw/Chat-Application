@@ -51,17 +51,17 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
         } else if (this.root == null) {
             this.root = new AVLNode(key, value);
         } else {
-            ArrayStack<AVLNode> stack = new ArrayStack<>();
+            ArrayStack<AVLNode> path = new ArrayStack<>();
             AVLNode parent = null;
             AVLNode current = (AVLNode)this.root;
             //Find if element exists in tree, else get a handle on parent
             while (current != null) {
                 if (key.compareTo(current.key) < 0) {
-                    stack.add(parent);
+                    path.add(parent);
                     parent = current;
                     current = (AVLNode)current.children[LEFT];
                 } else if (key.compareTo(current.key) > 0) {
-                    stack.add(parent);
+                    path.add(parent);
                     parent = current;
                     current = (AVLNode)current.children[RIGHT];
                 } else {
@@ -72,17 +72,17 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
             }
             //If not in tree, add to last parent node
             if (key.compareTo(parent.key) < 0) {
-                stack.add(parent);
+                path.add(parent);
                 current = new AVLNode(key, value);
-                stack.add(current);
+                path.add(current);
                 parent.children[LEFT] = current;
             } else {
-                stack.add(parent);
+                path.add(parent);
                 current = new AVLNode(key, value);
-                stack.add(current);
+                path.add(current);
                 parent.children[RIGHT] = current;
             }
-            balanceTree(stack);
+            balanceTree(path);
         }
         size++;
         return null;
@@ -91,17 +91,17 @@ public class AVLTree<K extends Comparable<? super K>, V> extends BinarySearchTre
     /**
      * Starting at where the new node was just placed, iterates through the
      * node path and checks if balancing is needed.
-     * @param stack that contains the node path back to the root.
+     * @param path contains the node path back to the root.
      */
-    private void balanceTree(ArrayStack<AVLNode> stack) {
-        AVLNode current = stack.next();
+    private void balanceTree(ArrayStack<AVLNode> path) {
+        AVLNode current = path.next();
         while (current != null) {
             setHeight(current);
             AVLNode parent;
             if (current == root) {
                 parent = null;
             } else {
-                parent = stack.next();
+                parent = path.next();
             }
             int balance = calculateBalance(current);
             if (balance == 2) {
