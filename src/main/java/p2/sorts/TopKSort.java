@@ -13,15 +13,12 @@ public class TopKSort {
      * Behaviour is undefined when k > array.length
      */
     public static <E> void sort(E[] array, int k, Comparator<E> comparator) {
-        k = Math.max(0, Math.min(k, array.length));
         MinFourHeap<E> heap = new MinFourHeap<>(comparator);
         for (int i = 0; i < k; i++) {
-            if (array[i] != null) {
-                heap.add(array[i]);
-            }
+            heap.add(array[i]);
         }
         for (int i = k; i < array.length; i++) {
-            if (array[i] != null && heap.hasWork() && comparator.compare(array[i],
+            if (heap.hasWork() && comparator.compare(array[i],
                     heap.peek()) > 0) {
                 heap.next();
                 heap.add(array[i]);

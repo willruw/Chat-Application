@@ -6,6 +6,7 @@ import cse332.misc.LargeValueFirstItemComparator;
 import cse332.sorts.InsertionSort;
 import cse332.types.AlphabeticString;
 import cse332.types.NGram;
+import datastructures.worklists.MinFourHeap;
 import p2.sorts.TopKSort;
 
 import java.util.Comparator;
@@ -76,9 +77,16 @@ public class NGramToNextChoicesMap {
             InsertionSort.sort(afterNGrams, comp);
         } else {
             // You must fix this line toward the end of the project
-            //throw new NotYetImplementedException();
-            TopKSort.sort(afterNGrams, k, comp.reversed());
-            TopKSort.sort(afterNGrams, k, comp);
+            if (k <= afterNGrams.length) { //Since it's undefined otherwise
+                TopKSort.sort(afterNGrams, k, comp.reversed());
+                Item<String, Integer>[] temp = new Item[k];
+                for (int i = 0; i < k; i++) {
+                    temp[i] = afterNGrams[(k - 1) - i];
+                }
+                for (int i = 0; i < k; i++) {
+                    afterNGrams[i] = temp[i];
+                }
+            }
         }
 
         String[] nextWords = new String[k < 0 ? afterNGrams.length : k];
