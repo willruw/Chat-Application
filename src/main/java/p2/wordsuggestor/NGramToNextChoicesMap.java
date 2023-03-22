@@ -77,7 +77,7 @@ public class NGramToNextChoicesMap {
             InsertionSort.sort(afterNGrams, comp);
         } else {
             // You must fix this line toward the end of the project
-            if (k <= afterNGrams.length) { //Since it's undefined otherwise
+            k = (k > afterNGrams.length) ? afterNGrams.length : k;
                 TopKSort.sort(afterNGrams, k, comp.reversed());
                 Item<String, Integer>[] temp = new Item[k];
                 for (int i = 0; i < k; i++) {
@@ -86,7 +86,6 @@ public class NGramToNextChoicesMap {
                 for (int i = 0; i < k; i++) {
                     afterNGrams[i] = temp[i];
                 }
-            }
         }
 
         String[] nextWords = new String[k < 0 ? afterNGrams.length : k];
